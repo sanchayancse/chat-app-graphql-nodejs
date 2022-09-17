@@ -1,6 +1,7 @@
 import { ApolloServer, gql } from "apollo-server";
 
 import { ApolloServerPluginLandingPageLocalDefault } from "apollo-server-core";
+import crypto from "crypto";
 
 const users = [
   {
@@ -27,22 +28,44 @@ const typeDefs = gql`
     email: String
   }
 
+  input UserInput{
+    firstName:String!
+    lastName:String!
+    email:String!
+    password:String!
+  }
+
   type Query {
     users: [User],
     user(id:ID!):User
+  }
+
+  type Mutation{
+    createUser(userNew:UserInput!):User
   }
 `;
 
 const resolvers = {
   Query: {
     users: () => {
-      return users
+      return users;
     },
 
-    user: (parent,{id},context) => {
-      return users.find(item=>item.id == id)
+    user: (parent, { id }, context) => {
+      return users.find((item) => item.id == id);
     },
   },
+
+  Mutation:{
+    createUser:(_,{userNew})=>{
+      const newUser = {
+        id:crypto.randomUUID(),
+        ...userNew
+      }
+      users.push(newUser)
+      return newUser
+    }
+  }
 };
 
 // The ApolloServer constructor requires two parameters: your schema
