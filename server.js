@@ -28,7 +28,8 @@ const typeDefs = gql`
   }
 
   type Query {
-    users: [User]
+    users: [User],
+    user(id:ID!):User
   }
 `;
 
@@ -36,6 +37,10 @@ const resolvers = {
   Query: {
     users: () => {
       return users
+    },
+
+    user: (parent,{id},context) => {
+      return users.find(item=>item.id == id)
     },
   },
 };
