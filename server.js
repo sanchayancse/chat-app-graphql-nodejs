@@ -20,15 +20,22 @@ const users = [
 ];
 
 const typeDefs = gql`
+  type User {
+    id: ID
+    firstName: String
+    lastName: String
+    email: String
+  }
+
   type Query {
-    greet: String
+    users: [User]
   }
 `;
 
 const resolvers = {
   Query: {
-    greet: () => {
-      return "Hello World";
+    users: () => {
+      return users
     },
   },
 };
