@@ -20,12 +20,24 @@ const users = [
   },
 ];
 
+const todo = [
+  {
+    title:"abcd",
+    by: 1
+  },
+  {
+    title:"abcd2",
+    by: 2
+  }
+]
+
 const typeDefs = gql`
   type User {
-    id: ID
-    firstName: String
-    lastName: String
-    email: String
+    id: ID!
+    firstName: String!
+    lastName: String!
+    email: String!
+    todos:[Todo]
   }
 
   input UserInput{
@@ -33,6 +45,12 @@ const typeDefs = gql`
     lastName:String!
     email:String!
     password:String!
+  }
+
+  type Todo{
+    title: String!
+    by: ID!
+
   }
 
   type Query {
@@ -54,6 +72,12 @@ const resolvers = {
     user: (parent, { id }, context) => {
       return users.find((item) => item.id == id);
     },
+  },
+  User:{
+    todos:(parent)=>{
+      console.log(parent,"parent");
+     return todo.filter(todo=>todo.by == parent.id)
+    }
   },
 
   Mutation:{
